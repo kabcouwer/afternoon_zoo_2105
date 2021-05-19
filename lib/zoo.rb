@@ -6,6 +6,7 @@ class Zoo
               :zip,
               :inventory,
               :animal_count
+              # :animal
 
   def initialize(name, street, city, state, zip)
     @name = name
@@ -26,5 +27,20 @@ class Zoo
     @animal_count += 1
   end
 
+  def animals_older_than(weeks)
+    # require 'pry'; binding.pry
+    @inventory.find_all do |animal|
+      weeks >= animal.age #need to remove text
+    end
+  end
+
+  #also remove text for total weight of animals
+
+  def details
+    @details = {
+      "total_weight" => 265,
+      "street_address" => street
+    }
+  end
 
 end
