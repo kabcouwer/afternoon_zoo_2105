@@ -1,65 +1,77 @@
 class Zoo
-  attr_reader :name,
-              :street,
+  attr_reader :street,
               :city,
               :state,
-              :zip,
-              :inventory,
-              :animal_count
+              :zip_code,
+              :inventory
 
-  def initialize(name, street, city, state, zip)
+  def initialize(name, street, city, state, zip_code)
     @name = name
     @street = street
     @city = city
     @state = state
-    @zip = zip
+    @zip_code = zip_code
     @inventory = []
-    @animal_count = 0
   end
 
   def address
-    return "#{@street} #{@city}, #{@state} #{@zip}"
+    "#{@street} #{@city}, #{@state} #{@zip_code}"
+  end
+
+  def animal_count
+    @inventory.length
   end
 
   def add_animal(animal)
     @inventory << animal
-    @animal_count += 1
   end
 
-  def animals_older_than(weeks)
-    # require 'pry'; binding.pry
-    @inventory.find_all do |animal|
-      weeks >= animal.age
+  def animals_older_than(age)
+    # @inventory.find_all do |animal|
+    #   age >= (animal.age_in_days / 7)
+    # end
+    older = []
+    @inventory.each do |animal|
+      if (animal.age_in_days / 7) >= age
+        older << animal
+      end
     end
+    older
   end
 
-  #also remove text for total weight of animals
-  def animals_sorted_by_weight
-
+  def total_weight_of_animals
+    weight = 0
+    @inventory.each do |animal|
+      weight += animal.weight.split.first.to_i
+    end
+    weight
   end
 
   def details
-    @details = {
-      "total_weight" => 265,
+    {
+      "total_weight" => total_weight_of_animals,
       "street_address" => street
     }
   end
 
-  # def animal_hash
-  #   animal_hash = {Hash.new { |hash, key| hash[key] = [] }
-  #   @inventory.each do |animal|
-  #     animal_hash[animal.name] << animal.include?('C')
-  #   end
-  #   @inventory.each do |animal|
-  #     animal_hash[animal.name] << animal.include?('D')
-  #   end
-  #   @inventory.each do |animal|
-  #     animal_hash[animal.name] << animal.include?('R')
-  #   end
-  #   @inventory.each do |animal|
-  #     animal_hash[animal.name] << animal.include?('S')
-  #   end
-  # end
+  def animals_sorted_by_weight
+    @inventory.sort_by do |animal|
+      -(animal.weight.split.first.to_i)
+    end
+  end
 
+  def animal_hash
+    hash = Hash.new
+
+    @inventory.each do |animal|
+      first_letter = animal.kind[0]
+      if hash[first_letter]
+        hash[first_letter] << animal
+      else
+        hash[first_letter] = [animal]
+      end
+    end
+    hash
+  end
 
 end
